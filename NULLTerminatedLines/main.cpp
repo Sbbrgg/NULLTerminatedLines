@@ -16,16 +16,27 @@ int hex_to_dec(const char* str);
 
 void main()
 {
-	//setlocale(LC_ALL, "");
-	////char str[] = { 'H', 'e', 'l', 'l', 'o', 0 };
-	////char str[] = "Hello";
-	//const int SIZE = 20;
-	//char str[SIZE] = {};
-	//cout << "Hello world!" << endl;
-	//SetConsoleCP(1251);
-	//cin.getline(str, SIZE);
-	//SetConsoleCP(866);
-	//cout << StrLength(str);
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+
+	const int SIZE = 100;
+	char str[SIZE];
+
+	cout << "Введите строку: ";
+	cin.getline(str, SIZE);
+
+	cout << "Длина: " << StrLength(str) << endl;
+
+	ToUpper(str);
+	cout << "В верхнем регистре: " << str << endl;
+
+	ToLower(str);
+	cout << "В нижнем регистре: " << str << endl;
+
+	Shrink(str);
+	cout << "После удаления лишних пробелов: " << str << endl;
+
+	cout << "Палиндром? " << (is_palindrome(str) ? "Да" : "Нет") << endl;
 
 }
 
@@ -114,7 +125,7 @@ bool is_int_number(const char* str)
 int to_int_number(const char* str)
 {
 	int i = 0, num = 0, sign = 1;
-	for (; str[i] != '0'; i++)
+	for (; str[i] != '\0'; i++)
 	{
 		num *= 10;
 		num += str[i] - '0';
@@ -150,6 +161,7 @@ bool is_hex_number(const char* str)
 			return false;
 		}
 	}
+	return true;
 }
 int hex_to_dec(const char* str)
 {
@@ -158,10 +170,11 @@ int hex_to_dec(const char* str)
 	{
 		int digit;
 		if (str[i] >= '0' && str[i] <= '9') digit = str[i] - '0';
-		else if (str[i] >= 'a' && str[i] <= 'z') digit = str[i] - 'a';
-		else if (str[i] >= 'A' && str[i] <= 'Z') digit = str[i] - 'A';
+		else if (str[i] >= 'a' && str[i] <= 'f') digit = str[i] - 'a' + 10;
+		else if (str[i] >= 'A' && str[i] <= 'F') digit = str[i] - 'A' + 10;
 		else digit = 0;
 		rezult = rezult * 16 + digit;
+		i++;
 	}
 	return rezult;
 }
