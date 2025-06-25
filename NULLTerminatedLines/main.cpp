@@ -310,53 +310,73 @@ unsigned long long hex_to_dec(const char* str)
 	return rezult;*/
 }
 
+//bool is_IP_adress(const char str[])
+//{
+//	int n = strlen(str);
+//	if (n < 7 || n > 15)return false;
+//	char bytes[4][4] = {};
+//	//char byte[4] = {};
+//	for (int i = 0, j = 0, k = 0, points = 0; str[i]; i++)
+//	{
+//		if (str[i] == '.')
+//		{
+//			j++;
+//			points++;
+//			if (points > 3) return false;
+//			k = 0;
+//			continue;
+//		}
+//		bytes[j][k++] = str[i];
+//	}
+//	for (int i = 0; i < 4; i++)
+//	{
+//		if (is_int_number(bytes[i]) > 255)return false;
+//		cout << bytes[i] << "\t";
+//	}
+//	cout << endl;
+//
+//	//					MY VERSION						\\
+//
+//	/*int len = StringLength(str), num = 0, parts = 0, digitals_of_part = 0;
+//	if (len < 7 || len > 15)return false;
+//	for (int i = 0; i <= len; i++)
+//	{
+//		if (isdigit(str[i]))
+//		{
+//			num = num * 10 + (str[i] - '0');
+//			digitals_of_part++;
+//			if (num > 255 || digitals_of_part > 3) return false;
+//		}
+//		else if (str[i] == '.' || str[i] == '\0')
+//		{
+//			if (digitals_of_part == 0)return false;
+//			++parts;
+//			num = 0;
+//			digitals_of_part = 0;
+//			if (parts > 4) return false;
+//		}
+//		else return false;
+//	}
+//	return parts == 4;*/
+//}
 bool is_IP_adress(const char str[])
 {
 	int n = strlen(str);
 	if (n < 7 || n > 15)return false;
-	char bytes[4][4] = {};
-	//char byte[4] = {};
-	for (int i = 0, j = 0, k = 0; str[i]; i++)
+	char byte[4] = {};
+	for (int i = 0, j = 0; str[i]; i++)
 	{
 		if (str[i] == '.')
 		{
-			j++;
+			j=0;
 			if (j > 3) return false;
-			k = 0;
+			if (is_int_number(byte) > 255) return false;
 			continue;
 		}
-		bytes[j][k++] = str[i];
+		byte[j++] = str[i];
+		if (j > 3)return false;
 	}
-	for (int i = 0; i < 4; i++)
-	{
-		if (to_int_number(bytes[i]) > 255)return false;
-		cout << bytes[i] << "\t";
-	}
-	cout << endl;
-
-	//					MY VERSION						\\
-
-	/*int len = StringLength(str), num = 0, parts = 0, digitals_of_part = 0;
-	if (len < 7 || len > 15)return false;
-	for (int i = 0; i <= len; i++)
-	{
-		if (isdigit(str[i]))
-		{
-			num = num * 10 + (str[i] - '0');
-			digitals_of_part++;
-			if (num > 255 || digitals_of_part > 3) return false;
-		}
-		else if (str[i] == '.' || str[i] == '\0')
-		{
-			if (digitals_of_part == 0)return false;
-			++parts;
-			num = 0;
-			digitals_of_part = 0;
-			if (parts > 4) return false;
-		}
-		else return false;
-	}
-	return parts == 4;*/
+	return true;
 }
 bool is_MAC_adress(const char* str)
 {
