@@ -2,59 +2,76 @@
 #include<windows.h>
 using namespace std;
 
-int StrLength(const char* str);
-void ToUpper(char* str);
+int StringLength(const char* str);
+char* ToUpper(char* str);
 void ToLower(char* str);
-void Shrink(char* str);
-bool is_palindrome(const char* str);
+char* Shrink(char* str);
+bool is_palindrome(const char str[]);
 bool is_int_number(const char* str);
 int to_int_number(const char* str);
 bool is_bin_number(const char* str);
 int bin_to_dec(const char* str);
 bool is_hex_number(const char* str);
 int hex_to_dec(const char* str);
+bool is_IP_adress(const char* str);
+bool is_MAC_adress(const char* str);
 
 void main()
 {
-	SetConsoleCP(1251);
-	SetConsoleOutputCP(1251);
+	setlocale(LC_ALL, "Russian");
+	//for (int i = 0; i < 256; i++)cout << i << "\t" << (char)i << endl;
+	const int SIZE = 90;
+	char str[SIZE]/* = "Хорошо      живет     на     свете      Винни      Пух"*/ = "Аргентина манит негра";
+	//cout << "Введите строку" << endl;
+	//SetConsoleCP(1251);
+	//cin.getline(str, SIZE);
+	//SetConsoleCP(866);
+	cout << "Длина: " << strlen(str) << endl;	//Возвращает размер строки в символах
+	cout << "Длина: " << StringLength(str) << endl;
+	//cout << ToUpper(str) << endl;
+	cout << Shrink(str) << endl;
 
-	const int SIZE = 100;
-	char str[SIZE];
-
-	cout << "Введите строку: ";
-	cin.getline(str, SIZE);
-
-	cout << "Длина: " << StrLength(str) << endl;
-
-	ToUpper(str);
-	cout << "В верхнем регистре: " << str << endl;
-
-	ToLower(str);
-	cout << "В нижнем регистре: " << str << endl;
-
-	Shrink(str);
-	cout << "После удаления лишних пробелов: " << str << endl;
-
-	cout << "Палиндром? " << (is_palindrome(str) ? "Да" : "Нет") << endl;
-
+	cout << "Строка " << (is_palindrome(str) ? "" : "НЕ ") << "является палиндромом" << endl;
+	//SetConsoleCP(1251);
+	//SetConsoleOutputCP(1251);
+	//const int SIZE = 100;
+	//char str[SIZE];
+	//cout << "Введите строку: ";
+	//cin.getline(str, SIZE);
+	//cout << "Длина: " << StringLength(str) << endl;
+	//cout << "Длина: " << strlen(str) << endl;	//Возвращает размер строки в символах
+	//ToUpper(str);
+	//cout << "В верхнем регистре: " << str << endl;
+	//ToLower(str);
+	//cout << "В нижнем регистре: " << str << endl;
+	//Shrink(str);
+	//cout << "После удаления лишних пробелов: " << str << endl;
+	//cout << "Палиндром? " << (is_palindrome(str) ? "Да" : "Нет") << endl;
 }
 
-int StrLength(const char* str)
+int StringLength(const char* str)
 {
-	int length = 0;
-	while (str[length] != '\0')length++;
-	return length;
+	int i = 0;
+	for (; str[i]; i++);
+	return i;
 }
-void ToUpper(char* str)
+char* ToUpper(char* str)
 {
-	for (int i = 0; str[i] != '\0'; i++)
+	for (int i = 0; str[i]; i++)
+	{
+		//if(str[i]>='a' &&str[i]<='z')str[i] -= ' '/*str[i] -= 32;*/;
+		//if(str[i]>='а' &&str[i]<='я')str[i] -= ' ';
+		//if (str[i] == 'ё')str[i] -= 16;
+		str[i] = toupper(str[i]);
+	}
+	return str;
+	/*for (int i = 0; str[i] != '\0'; i++)
 	{
 		if (str[i] >= 'a' && str[i] <= 'z')
 		{
 			str[i] -= 32;
 		}
-	}
+	}*/
 }
 void ToLower(char* str)
 {
@@ -66,9 +83,17 @@ void ToLower(char* str)
 		}
 	}
 }
-void Shrink(char* str)
+char* Shrink(char* str)
 {
-	bool space = true;
+	for (int i = 0; str[i]; i++)
+	{
+		while (str[i] == ' ' && str[i + 1] == ' ')
+		{
+			for (int j = i + 1; str[j]; j++)str[j] = str[j + 1];
+		}
+	}
+	return str;
+	/*bool space = true;
 	int i = 0, j = 0;
 	while (str[i] != '\0')
 	{
@@ -88,11 +113,37 @@ void Shrink(char* str)
 		}
 	}
 	if (str[j - 1] == ' ')--j;
-	str[j] = '\0';
+	str[j] = '\0';*/
 }
-bool is_palindrome(const char* str)
+char* RemoveSymbol(char str[], const char symbol)
 {
-	int len = StrLength(str), index = 0;
+	for (int i = 0; str[i]; i++)
+	{
+		while (str[i] == symbol)
+		{
+			for (int j = i; str[j]; j++) str[j] = str[j + 1];
+		}
+	}
+	return str;
+}
+bool is_palindrome(const char str[])
+{
+	int n = strlen(str);
+	char* buffer = new char[n + 1] {};
+	for (int i = 0; str[i]; i++)buffer[i] = str[i];
+	ToUpper(buffer);
+	n = strlen(RemoveSymbol(buffer, ' '));
+	for (int i = 0; i < n / 2; i++)
+	{
+		if (buffer[i] != buffer[n - 1 - i])
+		{
+			return false;
+			delete[] buffer;
+		}
+	}
+	delete[] buffer;
+	return true;
+	/*int len = StringLength(str), index = 0;
 	char filtered[50] = { };
 	for (int i = 0; i < len; i++)
 	{
@@ -110,7 +161,7 @@ bool is_palindrome(const char* str)
 			return false;
 		}
 	}
-	return true;
+	return true;*/
 }
 bool is_int_number(const char* str)
 {
@@ -177,4 +228,50 @@ int hex_to_dec(const char* str)
 		i++;
 	}
 	return rezult;
+}
+
+bool is_IP_adress(const char* str)
+{
+	int len = StringLength(str), num = 0, parts = 0, digitals_of_part = 0;
+	if (len < 7 || len > 15)return false;
+	for (int i = 0; i <= len; i++)
+	{
+		if (isdigit(str[i]))
+		{
+			num = num * 10 + (str[i] - '0');
+			digitals_of_part++;
+			if (num > 255 || digitals_of_part > 3) return false;
+		}
+		else if (str[i] == '.' || str[i] == '\0')
+		{
+			if (digitals_of_part == 0)return false;
+			++parts;
+			num = 0;
+			digitals_of_part = 0;
+			if (parts > 4) return false;
+		}
+		else return false;
+	}
+	return parts == 4;
+}
+bool is_MAC_adress(const char* str)
+{
+	int len = StringLength(str);
+	if (len != 17)return false;
+
+	for (int i = 0; i < 17; i++)
+	{
+		if (i % 3 == 2)
+		{
+			if (str[i] != ':')return false;
+		}
+		else
+		{
+			if (!((str[i] >= '0' && str[i] <= '9') || 
+				(str[i] >= 'a' && str[i] <= 'f') || 
+				(str[i] >= 'A' && str[i] <= 'F')))
+			return false;
+		}
+	}
+	return true;
 }
